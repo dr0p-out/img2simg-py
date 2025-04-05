@@ -1,3 +1,6 @@
 [submodule "core"]
 	path = core
 	url = ./core
+[submodule "libbase"]
+	path = libbase
+	url = ./libbase

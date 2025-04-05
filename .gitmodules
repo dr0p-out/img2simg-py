@@ -1,6 +1,8 @@
 [submodule "core"]
+	shallow = true
 	path = core
-	url = ./core
+	url = https://android.googlesource.com/platform/system/core.git
 [submodule "libbase"]
+	shallow = true
 	path = libbase
-	url = ./libbase
+	url = https://android.googlesource.com/platform/system/libbase.git

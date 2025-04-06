@@ -4,7 +4,7 @@ from os import SEEK_SET, SEEK_END
 import sys
 from sys import stderr
 
-from sparse import SparseReadMode, sparse_file_new
+from sparse import SparseReadMode, sparse_file_new, sparse_file_verbose
 
 def usage():
   print("Usage: img2simg.py <raw_image_file> <sparse_image_file>", file=stderr)
@@ -46,6 +46,7 @@ def main(argv: list[str]) -> int:
     print("Failed to create sparse file", file=stderr)
     return 1
 
+  sparse_file_verbose(s)
   # TBD
 
   in_.close()

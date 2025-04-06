@@ -21,3 +21,6 @@ def sparse_file_new(block_size: int, len_: int) -> typing.Optional[SparseFile]:
   s.len_ = len_
 
   return s
+
+def sparse_file_verbose(s: SparseFile):
+  s.verbose = True

@@ -1,4 +1,7 @@
 import dataclasses
+import typing
+
+from backed_block import BackedBlockList
 
 @dataclasses.dataclass
 class SparseFile:
@@ -6,4 +9,5 @@ class SparseFile:
   len_: int = 0
   verbose: bool = False
 
+  backed_block_list: typing.Optional[BackedBlockList] = None
   # TBD

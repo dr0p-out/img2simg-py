@@ -2,19 +2,31 @@ from errno import EINVAL
 import typing
 
 from sparse import SparseReadMode
+from output_file import read_all
 from sparse_file import SparseFile
+from sparse_defs import error_errno
 
-def _do_sparse_file_read_normal(s: SparseFile, fd: typing.BinaryIO, offset: int,
+from c_style_macros import py_pass_func_name
+
+@py_pass_func_name
+def _do_sparse_file_read_normal(func__: str,
+                                s: SparseFile, fd: typing.BinaryIO, offset: int,
                                 remain: int) -> int:
   block = offset // s.block_size
 
   while remain > 0:
     to_read = min(remain, s.block_size)
-    # TBD
+    ret, buf = read_all(fd, to_read)
+    if ret < 0:
+      error_errno(func__, -ret, "failed to read sparse file")
+      return ret
 
     if to_read == s.block_size:
       sparse_block = True
-      # TBD
+      for i in range(4, s.block_size, 4):
+        if buf[:4] != buf[i:i + 4]:
+          sparse_block = False
+          break
     else:
       sparse_block = False
 

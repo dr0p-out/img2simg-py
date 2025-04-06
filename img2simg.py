@@ -1,10 +1,11 @@
 import getopt
 from getopt import gnu_getopt
-from os import SEEK_SET, SEEK_END
+from os import SEEK_SET, SEEK_END, strerror
 import sys
 from sys import stderr
 
 from sparse import SparseReadMode, sparse_file_new, sparse_file_verbose
+from sparse_read import sparse_file_read
 
 def usage():
   print("Usage: img2simg.py <raw_image_file> <sparse_image_file>", file=stderr)
@@ -47,6 +48,11 @@ def main(argv: list[str]) -> int:
     return 1
 
   sparse_file_verbose(s)
+  ret = sparse_file_read(s, in_, mode)
+  if ret < 0:
+    print("Failed to read file: %s" % strerror(-ret), file=stderr)
+    return 1
+
   # TBD
 
   in_.close()

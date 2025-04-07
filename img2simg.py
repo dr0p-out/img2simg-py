@@ -7,10 +7,16 @@ from sys import stderr
 from sparse import SparseReadMode, sparse_file_new, sparse_file_verbose
 from sparse_read import sparse_file_read
 
+from py_reserved_mem import g_reserved_mem
+
 def usage():
   print("Usage: img2simg.py <raw_image_file> <sparse_image_file>", file=stderr)
 
 def main(argv: list[str]) -> int:
+  if not g_reserved_mem.acquire(0x10000):
+    stderr.write('Cannot allocate 64K reserved memory\n')
+    return 1
+
   mode = SparseReadMode.NORMAL
   block_size = 4096
 

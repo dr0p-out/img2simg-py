@@ -1,3 +1,5 @@
+cmake_minimum_required()
+
 add_library(base
   libbase/stringprintf.cpp
   libbase/mapped_file.cpp)

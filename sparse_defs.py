@@ -1,3 +1,7 @@
+"""
+  core/libsparse/sparse_defs.h
+"""
+
 from os import strerror
 from sys import stderr
 

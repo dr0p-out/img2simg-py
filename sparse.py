@@ -1,3 +1,8 @@
+"""
+  core/libsparse/include/sparse/sparse.h
+  core/libsparse/sparse.cpp
+"""
+
 import enum
 import typing
 

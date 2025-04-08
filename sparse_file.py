@@ -1,3 +1,7 @@
+"""
+  core/libsparse/sparse_file.h
+"""
+
 import dataclasses
 import typing
 

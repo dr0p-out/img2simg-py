@@ -1,3 +1,8 @@
+"""
+  core/libsparse/backed_block.h
+  core/libsparse/backed_block.cpp
+"""
+
 from __future__ import annotations
 
 import dataclasses
@@ -10,6 +15,7 @@ class BackedBlock:
   _block: int = 0
   _len: int = 0
   _next: typing.Optional[BackedBlock] = None
+  # Python: union fields are in sub-classes
 
 @dataclasses.dataclass
 class BackedBlockList:

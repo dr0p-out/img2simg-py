@@ -1,3 +1,7 @@
+"""
+  core/libsparse/img2simg.cpp
+"""
+
 import getopt
 from getopt import gnu_getopt
 from os import SEEK_SET, SEEK_END, strerror
@@ -13,6 +17,7 @@ def usage():
   print("Usage: img2simg.py <raw_image_file> <sparse_image_file>", file=stderr)
 
 def main(argv: list[str]) -> int:
+  # XXX(Python)
   if not g_reserved_mem.acquire(0x10000):
     stderr.write('Cannot allocate 64K reserved memory\n')
     return 1

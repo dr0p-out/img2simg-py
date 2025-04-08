@@ -1,3 +1,8 @@
+"""
+  core/libsparse/include/sparse/sparse.h
+  core/libsparse/sparse_read.cpp
+"""
+
 from errno import EINVAL
 import typing
 
@@ -39,6 +44,7 @@ def _do_sparse_file_read_normal(func__: str,
   return 0
 
 def _sparse_file_read_normal(s: SparseFile, fd: typing.BinaryIO) -> int:
+  # Python: buf is allocated in read_all()
   ret = _do_sparse_file_read_normal(s, fd, 0, s.len_)
   return ret
 

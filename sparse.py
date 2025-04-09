@@ -30,7 +30,7 @@ def sparse_file_new(block_size: int, len_: int) -> typing.Optional[SparseFile]:
 
   return s
 
-def sparse_file_add_fill(s: SparseFile, fill_val: bytes, len_: int,
+def sparse_file_add_fill(s: SparseFile, fill_val: int, len_: int,
                          block: int) -> int:
   return backed_block_add_fill(s.backed_block_list, fill_val, len_, block)
 

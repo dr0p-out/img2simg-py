@@ -20,7 +20,7 @@ class BackedBlock:
 
 @dataclasses.dataclass
 class BackedBlockFill(BackedBlock):
-  _val: bytes = b'\x00\x00\x00\x00'  # XXX(Python): properly type this
+  _val: int = 0
 
 @dataclasses.dataclass
 class BackedBlockList:
@@ -96,7 +96,7 @@ def _queue_bb(bbl: BackedBlockList, new_bb: BackedBlock) -> int:
 
   return 0
 
-def backed_block_add_fill(bbl: BackedBlockList, fill_val: bytes, len_: int,
+def backed_block_add_fill(bbl: BackedBlockList, fill_val: int, len_: int,
                           block: int) -> int:
   try:
     bb = BackedBlockFill()

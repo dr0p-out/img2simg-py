@@ -4,6 +4,7 @@
 """
 
 from errno import EINVAL
+import struct
 import typing
 
 from sparse import SparseReadMode, sparse_file_add_fill
@@ -28,15 +29,16 @@ def _do_sparse_file_read_normal(func__: str,
 
     if to_read == s.block_size:
       sparse_block = True
-      for i in range(4, s.block_size, 4):
-        if buf[:4] != buf[i:i + 4]:
+      buf = struct.unpack(f'<{s.block_size // 4}I', buf)
+      for i in range(1, s.block_size // 4):
+        if buf[0] != buf[i]:
           sparse_block = False
           break
     else:
       sparse_block = False
 
     if sparse_block:
-      ret = sparse_file_add_fill(s, buf[:4], to_read, block)
+      ret = sparse_file_add_fill(s, buf[0], to_read, block)
     # TBD
 
     if ret < 0:

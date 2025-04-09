@@ -29,16 +29,14 @@ def _do_sparse_file_read_normal(func__: str,
 
     if to_read == s.block_size:
       sparse_block = True
-      buf = struct.unpack(f'<{s.block_size // 4}I', buf)
-      for i in range(1, s.block_size // 4):
-        if buf[0] != buf[i]:
-          sparse_block = False
-          break
+      # XXX(Python): adapted for perf
+      if buf != buf[:4] * (s.block_size // 4):
+        sparse_block = False
     else:
       sparse_block = False
 
     if sparse_block:
-      ret = sparse_file_add_fill(s, buf[0], to_read, block)
+      ret = sparse_file_add_fill(s, struct.unpack('<I', buf[:4])[0], to_read, block)
     # TBD
 
     if ret < 0:

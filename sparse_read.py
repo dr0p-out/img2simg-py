@@ -6,7 +6,7 @@
 from errno import EINVAL
 import typing
 
-from sparse import SparseReadMode
+from sparse import SparseReadMode, sparse_file_add_fill
 from output_file import read_all
 from sparse_file import SparseFile
 from sparse_defs import error_errno
@@ -35,7 +35,12 @@ def _do_sparse_file_read_normal(func__: str,
     else:
       sparse_block = False
 
+    if sparse_block:
+      ret = sparse_file_add_fill(s, buf[:4], to_read, block)
     # TBD
+
+    if ret < 0:
+      return ret
 
     remain -= to_read
     offset += to_read

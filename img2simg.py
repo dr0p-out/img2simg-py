@@ -8,7 +8,8 @@ from os import SEEK_SET, SEEK_END, strerror
 import sys
 from sys import stderr
 
-from sparse import SparseReadMode, sparse_file_new, sparse_file_verbose
+from sparse import (SparseReadMode, sparse_file_new,
+                    sparse_file_destroy, sparse_file_verbose)
 from sparse_read import sparse_file_read
 
 from py_reserved_mem import g_reserved_mem
@@ -65,6 +66,8 @@ def main(argv: list[str]) -> int:
     return 1
 
   # TBD
+
+  sparse_file_destroy(s)
 
   in_.close()
   out.close()

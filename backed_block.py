@@ -45,6 +45,14 @@ def backed_block_list_new(block_size: int) -> typing.Optional[BackedBlockList]:
   b._block_size = block_size
   return b
 
+def backed_block_list_destroy(bbl: BackedBlockList):
+  if bbl._data_blocks is not None:
+    bb = bbl._data_blocks
+    while bb is not None:
+      next_ = bb._next
+      backed_block_destroy(bb)
+      bb = next_
+
 def _merge_bb(bbl: BackedBlockList, a: typing.Optional[BackedBlock], b: typing.Optional[BackedBlock]) -> int:
   if a is None or b is None:
     return -EINVAL

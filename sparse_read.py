@@ -7,7 +7,7 @@ from errno import EINVAL, ENOMEM
 import struct
 import typing
 
-from sparse import SparseReadMode, sparse_file_add_fill
+from sparse import SparseReadMode, sparse_file_add_fill, sparse_file_add_fd
 from output_file import read_all
 from sparse_file import SparseFile
 from sparse_defs import error_errno
@@ -40,7 +40,8 @@ def _do_sparse_file_read_normal(func__: str,
 
     if sparse_block:
       ret = sparse_file_add_fill(s, struct.unpack('<I', buf[:4])[0], to_read, block)
-    # TBD
+    else:
+      ret = sparse_file_add_fd(s, fd, offset, to_read, block)
 
     if ret < 0:
       return ret

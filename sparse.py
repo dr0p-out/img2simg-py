@@ -7,7 +7,7 @@ import enum
 import typing
 
 from sparse_file import SparseFile
-from backed_block import backed_block_list_new, backed_block_add_fill
+from backed_block import backed_block_list_new, backed_block_add_fill, backed_block_add_fd
 
 from py_reserved_mem import g_reserved_mem
 
@@ -33,6 +33,10 @@ def sparse_file_new(block_size: int, len_: int) -> typing.Optional[SparseFile]:
 def sparse_file_add_fill(s: SparseFile, fill_val: int, len_: int,
                          block: int) -> int:
   return backed_block_add_fill(s.backed_block_list, fill_val, len_, block)
+
+def sparse_file_add_fd(s: SparseFile, fd: typing.BinaryIO, file_offset: int, len_: int,
+                       block: int) -> int:
+  return backed_block_add_fd(s.backed_block_list, fd, file_offset, len_, block)
 
 def sparse_file_verbose(s: SparseFile):
   s.verbose = True

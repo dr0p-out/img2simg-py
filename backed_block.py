@@ -19,6 +19,11 @@ class BackedBlock:
   # Python: union fields are in sub-classes
 
 @dataclasses.dataclass
+class BackedBlockFd(BackedBlock):
+  _fd: typing.Optional[typing.BinaryIO] = None
+  _offset: int = 0
+
+@dataclasses.dataclass
 class BackedBlockFill(BackedBlock):
   _val: int = 0
 
@@ -56,6 +61,9 @@ def _merge_bb(bbl: BackedBlockList, a: typing.Optional[BackedBlock], b: typing.O
   # TODO(Python): use match stmt
   if isinstance(a, BackedBlockFill):
     if a._val != b._val:
+      return -EINVAL
+  elif isinstance(a, BackedBlockFd):
+    if a._fd is not b._fd or a._offset + a._len != b._offset:
       return -EINVAL
 
   a._len += b._len
@@ -107,6 +115,22 @@ def backed_block_add_fill(bbl: BackedBlockList, fill_val: int, len_: int,
   bb._block = block
   bb._len = len_
   bb._val = fill_val
+  bb._next = None
+
+  return _queue_bb(bbl, bb)
+
+def backed_block_add_fd(bbl: BackedBlockList, fd: typing.BinaryIO, offset: int, len_: int,
+                        block: int) -> int:
+  try:
+    bb = BackedBlockFd()
+  except MemoryError:
+    g_reserved_mem.release()
+    return -ENOMEM
+
+  bb._block = block
+  bb._len = len_
+  bb._fd = fd
+  bb._offset = offset
   bb._next = None
 
   return _queue_bb(bbl, bb)

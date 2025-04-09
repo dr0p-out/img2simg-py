@@ -3,7 +3,7 @@
   core/libsparse/sparse_read.cpp
 """
 
-from errno import EINVAL
+from errno import EINVAL, ENOMEM
 import struct
 import typing
 
@@ -13,6 +13,7 @@ from sparse_file import SparseFile
 from sparse_defs import error_errno
 
 from c_style_macros import py_pass_func_name
+from py_reserved_mem import g_reserved_mem
 
 @py_pass_func_name
 def _do_sparse_file_read_normal(func__: str,
@@ -28,10 +29,12 @@ def _do_sparse_file_read_normal(func__: str,
       return ret
 
     if to_read == s.block_size:
-      sparse_block = True
-      # XXX(Python): adapted for perf
-      if buf != buf[:4] * (s.block_size // 4):
-        sparse_block = False
+      try:
+        # XXX(Python): adapted for perf
+        sparse_block = buf == buf[:4] * (s.block_size // 4)
+      except MemoryError:
+        g_reserved_mem.release()
+        return -ENOMEM
     else:
       sparse_block = False
 

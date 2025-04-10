@@ -39,3 +39,7 @@ target_link_libraries(sparse
 add_executable(img2simg
   core/libsparse/img2simg.cpp)
 target_link_libraries(img2simg sparse)
+
+add_executable(simg2img
+  core/libsparse/simg2img.cpp)
+target_link_libraries(simg2img sparse)

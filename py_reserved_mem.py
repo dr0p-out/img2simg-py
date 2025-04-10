@@ -1,3 +1,7 @@
+"""
+r/hacks
+"""
+
 import typing
 
 class _ReservedMemory:

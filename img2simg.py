@@ -39,7 +39,8 @@ def main(argv: list[str]) -> int:
 
   arg_in = args[0]
   try:
-    in_ = open(arg_in, 'rb')
+    # XXX(Python): increased buffer size for perf
+    in_ = open(arg_in, 'rb', buffering=0x10000)
   except OSError as e:
     print("Cannot open input file %s: %s" % (arg_in, e.strerror), file=stderr)
     return 1

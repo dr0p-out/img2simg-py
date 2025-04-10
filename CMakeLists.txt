@@ -4,6 +4,8 @@
 
 cmake_minimum_required()
 
+project(LANGUAGES CXX)
+
 if(CYGWIN)
 # https://www.cygwin.com/ml/cygwin/2007-10/msg00594.html
 # XXX: upstream does same for macOS, consider applying:

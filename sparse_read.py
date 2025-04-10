@@ -58,8 +58,8 @@ def _sparse_file_read_normal(s: SparseFile, fd: typing.BinaryIO) -> int:
   return ret
 
 def sparse_file_read(s: SparseFile, fd: typing.BinaryIO, mode: SparseReadMode) -> int:
-  match mode:
-    case SparseReadMode.NORMAL:
-      return _sparse_file_read_normal(s, fd)
-    case _:
-      return -EINVAL
+  # TODO(Python): use match stmt
+  if mode == SparseReadMode.NORMAL:
+    return _sparse_file_read_normal(s, fd)
+  else:
+    return -EINVAL

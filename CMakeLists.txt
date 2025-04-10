@@ -4,6 +4,17 @@
 
 cmake_minimum_required()
 
+if(CYGWIN)
+# https://www.cygwin.com/ml/cygwin/2007-10/msg00594.html
+# XXX: upstream does same for macOS, consider applying:
+#      https://github.com/nmeum/android-tools/commit/21f1e58
+add_compile_definitions(
+  off64_t=off_t
+  lseek64=lseek
+  ftruncate64=ftruncate
+)
+endif()
+
 add_library(base
   libbase/stringprintf.cpp
   libbase/mapped_file.cpp)

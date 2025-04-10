@@ -1,1 +1,1 @@
-experimental py port of img2simg/libsparse (jff
+standalone pure py port of img2simg/libsparse (experimental, jff

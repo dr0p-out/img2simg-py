@@ -19,8 +19,8 @@ def usage():
 
 def main(argv: list[str]) -> int:
   # XXX(Python)
-  if not g_reserved_mem.acquire(0x10000):
-    stderr.write('Cannot allocate 64K reserved memory\n')
+  if not g_reserved_mem.acquire(0x40000):
+    stderr.write('Cannot allocate 256K reserved memory\n')
     return 1
 
   mode = SparseReadMode.NORMAL

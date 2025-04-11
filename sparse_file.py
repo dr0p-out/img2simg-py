@@ -14,4 +14,3 @@ class SparseFile:
   verbose: bool = False
 
   backed_block_list: typing.Optional[BackedBlockList] = None
-  # TBD

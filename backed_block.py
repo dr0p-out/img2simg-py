@@ -9,6 +9,8 @@ import dataclasses
 from errno import EINVAL, ENOMEM
 import typing
 
+from sparse_defs import align_down
+
 from py_reserved_mem import g_reserved_mem
 
 @dataclasses.dataclass
@@ -32,6 +34,24 @@ class BackedBlockList:
   _data_blocks: typing.Optional[BackedBlock] = None
   _last_used: typing.Optional[BackedBlock] = None
   _block_size: int = 0
+
+def backed_block_iter_new(bbl: BackedBlockList) -> typing.Optional[BackedBlock]:
+  return bbl._data_blocks
+
+def backed_block_iter_next(bb: BackedBlock) -> typing.Optional[BackedBlock]:
+  return bb._next
+
+def backed_block_iter(bbl: BackedBlockList) -> typing.Generator[BackedBlock, None, None]:
+  bb = backed_block_iter_new(bbl)
+  while bb is not None:
+    yield bb
+    bb = backed_block_iter_next(bb)
+
+def backed_block_len(bb: BackedBlock) -> int:
+  return bb._len
+
+def backed_block_block(bb: BackedBlock) -> int:
+  return bb._block
 
 def backed_block_destroy(bb: BackedBlock):
   pass  # Python: no-op for now
@@ -142,3 +162,32 @@ def backed_block_add_fd(bbl: BackedBlockList, fd: typing.BinaryIO, offset: int, 
   bb._next = None
 
   return _queue_bb(bbl, bb)
+
+def backed_block_split(bbl: BackedBlockList, bb: BackedBlock,
+                       max_len: int) -> int:
+  max_len = align_down(max_len, bbl._block_size)
+
+  if bb._len <= max_len:
+    return 0
+
+  try:
+    new_bb = dataclasses.replace(bb)  # Python: same type as bb
+  except MemoryError:
+    g_reserved_mem.release()
+    return -ENOMEM
+
+  # Python: values are already copied
+
+  new_bb._len = bb._len - max_len
+  new_bb._block = bb._block + max_len // bbl._block_size
+  new_bb._next = bb._next
+
+  # TODO(Python): use match stmt
+  if isinstance(bb, BackedBlockFd):
+    new_bb._offset += max_len
+  elif isinstance(bb, BackedBlockFill):
+   pass
+
+  bb._next = new_bb
+  bb._len = max_len
+  return 0

@@ -8,8 +8,9 @@ from os import SEEK_SET, SEEK_END, strerror
 import sys
 from sys import stderr
 
-from sparse import (SparseReadMode, sparse_file_new,
-                    sparse_file_destroy, sparse_file_verbose)
+from sparse import (SparseReadMode,
+                    sparse_file_new, sparse_file_destroy,
+                    sparse_file_write, sparse_file_verbose)
 from sparse_read import sparse_file_read
 
 from py_reserved_mem import g_reserved_mem
@@ -66,7 +67,10 @@ def main(argv: list[str]) -> int:
     print("Failed to read file: %s" % strerror(-ret), file=stderr)
     return 1
 
-  # TBD
+  ret = sparse_file_write(s, out)
+  if ret < 0:
+    print("Failed to write sparse file: %s" % strerror(-ret), file=stderr)
+    return 1
 
   sparse_file_destroy(s)
 
